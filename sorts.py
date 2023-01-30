@@ -1,32 +1,35 @@
+import re
 from copy import copy
 from timeit import default_timer as timer
+
+DEBUG = True
 
 
 def timed(func):
     def wrapper_function(*args, **kwargs):
         start = timer()
         func(*args, **kwargs)
-        print(timer() - start)
+        print("Timed:", timer() - start)
 
     return wrapper_function
 
 
 class Sorts:
-    def __init__(self, arr) -> None:
-        self.arr = copy(arr)
-        self.orig_arr = copy(arr)
-        self.qs_lower = 0
-        self.qs_upper = len(self.arr) - 1
+    def __init__(self, arr: list) -> None:
+        self.arr: list = copy(arr)
+        self.orig_arr: list = copy(arr)
+        self.qs_lower: int = 0
+        self.qs_upper: int = len(self.arr) - 1
 
     def __repr__(self) -> str:
         return "Sorts[original: %s, sorted: %s]" % (self.orig_arr, self.arr)
 
-    def reset(self):
+    def reset(self) -> None:
         self.arr = copy(self.orig_arr)
 
-    def __quicksort(self, lower, upper):
+    def __quicksort(self, lower: int, upper: int) -> None:
 
-        def partition(p_lower, p_upper):
+        def partition(p_lower: int, p_upper: int) -> int:
             pivot = self.arr[p_upper]
             n = p_lower - 1
 
@@ -44,9 +47,9 @@ class Sorts:
             self.__quicksort(lower, pivot_num - 1)
             self.__quicksort(pivot_num + 1, upper)
 
-    def __merge_sort(self, arr):
+    def __merge_sort(self, arr: list) -> list:
 
-        def merge(left, right):
+        def merge(left: list, right: list) -> list:
             sorted_arr = []
             left_idx, right_idx = 0, 0
             length_left, length_right = len(left), len(right)
@@ -83,20 +86,20 @@ class Sorts:
     @timed
     def heap_sort(self) -> None:
 
-        def heapify(arr: list, quantity: int, ini_parent: int) -> None:
-            parent_idx = ini_parent
-            left_idx = 2 * ini_parent + 1
-            right_idx = 2 * ini_parent + 2
+        def heapify(arr: list, h_quantity: int, h_ini_parent: int) -> None:
+            parent_idx = h_ini_parent
+            left_idx = 2 * h_ini_parent + 1
+            right_idx = 2 * h_ini_parent + 2
 
-            if left_idx < quantity and arr[ini_parent] < arr[left_idx]:
+            if left_idx < h_quantity and arr[h_ini_parent] < arr[left_idx]:
                 parent_idx = left_idx
 
-            if right_idx < quantity and arr[parent_idx] < arr[right_idx]:
+            if right_idx < h_quantity and arr[parent_idx] < arr[right_idx]:
                 parent_idx = right_idx
 
-            if parent_idx != ini_parent:
-                arr[ini_parent], arr[parent_idx] = arr[parent_idx], arr[ini_parent]
-                heapify(arr, quantity, parent_idx)
+            if parent_idx != h_ini_parent:
+                arr[h_ini_parent], arr[parent_idx] = arr[parent_idx], arr[h_ini_parent]
+                heapify(arr, h_quantity, parent_idx)
 
         quantity = len(self.arr)
 
@@ -108,15 +111,15 @@ class Sorts:
             heapify(self.arr, idx, 0)
 
     @timed
-    def quicksort(self):
+    def quicksort(self) -> None:
         self.__quicksort(self.qs_lower, self.qs_upper)
 
     @timed
-    def merge_sort(self):
+    def merge_sort(self) -> None:
         self.arr = self.__merge_sort(self.arr)
 
     @timed
-    def insertion_sort(self):
+    def insertion_sort(self) -> None:
         quantity = len(self.arr)
 
         for idx in range(1, quantity):
@@ -130,18 +133,41 @@ class Sorts:
             self.arr[predec_idx + 1] = key
 
 
+def validate_input(value: str) -> list:
+    items = re.split(r"[,;\s]+", value)
+    ret = []
+    for item in items:
+        try:
+            ret.append(int(item))
+        except ValueError:
+            if DEBUG:
+                print("Invalid value [{}] ignoring...".format(item))
+    return ret
+
+
+def main() -> None:
+    while True:
+        input_arr = input('input your list, separate the elements of the list with spaces: ')
+        if input_arr == 'stop':
+            break
+        arr = validate_input(input_arr)
+        sorts = Sorts(arr)
+        print("Heap sort")
+        sorts.heap_sort()
+        print(sorts)
+        print("Quick sort")
+        sorts.reset()
+        sorts.quicksort()
+        print(sorts)
+        print("Merge sort")
+        sorts.reset()
+        sorts.merge_sort()
+        print(sorts)
+        print("Insertion sort")
+        sorts.reset()
+        sorts.insertion_sort()
+        print(sorts)
+
+
 if __name__ == '__main__':
-    my_arr = [2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,]
-    sorts = Sorts(my_arr)
-    sorts.heap_sort()
-    print(sorts)
-    sorts.reset()
-    sorts.quicksort()
-    print(sorts)
-    sorts.reset()
-    sorts.merge_sort()
-    print(sorts)
-    sorts.reset()
-    # sorts.arr = sorts.arr[::-1]
-    sorts.insertion_sort()
-    print(sorts)
+    main()
