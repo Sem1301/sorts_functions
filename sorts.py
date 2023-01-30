@@ -24,22 +24,6 @@ class Sorts:
     def reset(self):
         self.arr = copy(self.orig_arr)
 
-    @staticmethod
-    def __heapify(arr: list, quantity: int, ini_parent: int) -> None:
-        parent_idx = ini_parent
-        left_idx = 2 * ini_parent + 1
-        right_idx = 2 * ini_parent + 2
-
-        if left_idx < quantity and arr[ini_parent] < arr[left_idx]:
-            parent_idx = left_idx
-
-        if right_idx < quantity and arr[parent_idx] < arr[right_idx]:
-            parent_idx = right_idx
-
-        if parent_idx != ini_parent:
-            arr[ini_parent], arr[parent_idx] = arr[parent_idx], arr[ini_parent]
-            Sorts.__heapify(arr, quantity, parent_idx)
-
     def __quicksort(self, lower, upper):
 
         def partition(p_lower, p_upper):
@@ -61,6 +45,30 @@ class Sorts:
             self.__quicksort(pivot_num + 1, upper)
 
     def __merge_sort(self, arr):
+
+        def merge(left, right):
+            sorted_arr = []
+            left_idx, right_idx = 0, 0
+            length_left, length_right = len(left), len(right)
+
+            while left_idx < length_left and right_idx < length_right:
+                if left[left_idx] <= right[right_idx]:
+                    sorted_arr.append(left[left_idx])
+                    left_idx += 1
+                else:
+                    sorted_arr.append(right[right_idx])
+                    right_idx += 1
+
+            while left_idx < length_left:
+                sorted_arr.append(left[left_idx])
+                left_idx += 1
+
+            while right_idx < length_right:
+                sorted_arr.append(right[right_idx])
+                right_idx += 1
+
+            return sorted_arr
+
         if len(arr) <= 1:
             return arr
 
@@ -70,42 +78,34 @@ class Sorts:
         left_arr = self.__merge_sort(left_arr)
         right_arr = self.__merge_sort(right_arr)
 
-        return self.__merge(left_arr, right_arr)
-
-    @staticmethod
-    def __merge(left, right):
-        sorted_arr = []
-        left_idx, right_idx = 0, 0
-        length_left, length_right = len(left), len(right)
-
-        while left_idx < length_left and right_idx < length_right:
-            if left[left_idx] <= right[right_idx]:
-                sorted_arr.append(left[left_idx])
-                left_idx += 1
-            else:
-                sorted_arr.append(right[right_idx])
-                right_idx += 1
-
-        while left_idx < length_left:
-            sorted_arr.append(left[left_idx])
-            left_idx += 1
-
-        while right_idx < length_right:
-            sorted_arr.append(right[right_idx])
-            right_idx += 1
-
-        return sorted_arr
+        return merge(left_arr, right_arr)
 
     @timed
     def heap_sort(self) -> None:
+
+        def heapify(arr: list, quantity: int, ini_parent: int) -> None:
+            parent_idx = ini_parent
+            left_idx = 2 * ini_parent + 1
+            right_idx = 2 * ini_parent + 2
+
+            if left_idx < quantity and arr[ini_parent] < arr[left_idx]:
+                parent_idx = left_idx
+
+            if right_idx < quantity and arr[parent_idx] < arr[right_idx]:
+                parent_idx = right_idx
+
+            if parent_idx != ini_parent:
+                arr[ini_parent], arr[parent_idx] = arr[parent_idx], arr[ini_parent]
+                heapify(arr, quantity, parent_idx)
+
         quantity = len(self.arr)
 
         for ini_parent in range(quantity, -1, -1):
-            self.__heapify(self.arr, quantity, ini_parent)
+            heapify(self.arr, quantity, ini_parent)
 
         for idx in range(quantity - 1, 0, -1):
             self.arr[idx], self.arr[0] = self.arr[0], self.arr[idx]
-            self.__heapify(self.arr, idx, 0)
+            heapify(self.arr, idx, 0)
 
     @timed
     def quicksort(self):
