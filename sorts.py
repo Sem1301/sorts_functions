@@ -14,7 +14,7 @@ def timed(func):
     return wrapper_function
 
 
-class Sorts:
+class Sorts(object):
     def __init__(self, arr: list) -> None:
         self.arr: list = copy(arr)
         self.orig_arr: list = copy(arr)
@@ -123,14 +123,14 @@ class Sorts:
         quantity = len(self.arr)
 
         for idx in range(1, quantity):
-            predec_idx = idx - 1
+            predecessor_idx = idx - 1
             key = self.arr[idx]
 
-            while predec_idx >= 0 and key < self.arr[predec_idx]:
-                self.arr[predec_idx + 1] = self.arr[predec_idx]
-                predec_idx -= 1
+            while predecessor_idx >= 0 and key < self.arr[predecessor_idx]:
+                self.arr[predecessor_idx + 1] = self.arr[predecessor_idx]
+                predecessor_idx -= 1
 
-            self.arr[predec_idx + 1] = key
+            self.arr[predecessor_idx + 1] = key
 
 
 def validate_input(value: str) -> list:
