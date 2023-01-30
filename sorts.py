@@ -115,9 +115,23 @@ class Sorts:
     def merge_sort(self):
         self.arr = self.__merge_sort(self.arr)
 
+    @timed
+    def insertion_sort(self):
+        quantity = len(self.arr)
+
+        for idx in range(1, quantity):
+            predec_idx = idx - 1
+            key = self.arr[idx]
+
+            while predec_idx >= 0 and key < self.arr[predec_idx]:
+                self.arr[predec_idx + 1] = self.arr[predec_idx]
+                predec_idx -= 1
+
+            self.arr[predec_idx + 1] = key
+
 
 if __name__ == '__main__':
-    my_arr = [2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15]
+    my_arr = [2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,2, 3, 4, 1, 2, 7, 10, 1000, 8, 7, 1, 18, 17, 16, 15,]
     sorts = Sorts(my_arr)
     sorts.heap_sort()
     print(sorts)
@@ -126,4 +140,8 @@ if __name__ == '__main__':
     print(sorts)
     sorts.reset()
     sorts.merge_sort()
+    print(sorts)
+    sorts.reset()
+    # sorts.arr = sorts.arr[::-1]
+    sorts.insertion_sort()
     print(sorts)
